@@ -52,7 +52,7 @@ psycopg-binary==3.3.8
 pydantic==2.14.3
 pydantic-settings==2.16.2
 pydantic_core==2.50.4
-python-dateutil==2.9.0.post0
+python-dateutil==4.0.0
 python-dotenv==1.2.4
 PyYAML==6.0.3
 redis==8.1.0

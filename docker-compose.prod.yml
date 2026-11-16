@@ -1,0 +1,251 @@
+# PRODUCTION stack (Step 11.2). Self-contained: do NOT combine with docker-compose.yml (development).
+#
+#   docker compose -f docker-compose.prod.yml --env-file /etc/llm-router/deploy.env up -d
+#
+# Two configuration files, both OUTSIDE the repository (chmod 600), never committed:
+#   deploy.env  (--env-file) infrastructure values + data-service secrets used by this file
+#               template: infrastructure/deploy.env.example
+#   app.env     (LLMR_APP_ENV_FILE) API settings: tokens, chat keys, budgets, providers
+#               template: .env.production.example
+# The API never receives the PostgreSQL admin password: only the least-privileged app role's.
+#
+# Topology: only `edge` publishes ports (80/443). `web` and the APIs sit on the `edge` network; Redis and
+# PostgreSQL sit on the `internal` network, which has no route out of the host. See DEPLOYMENT.md.
+#
+# Volumes are named <project>_postgres_data / _redis_data / _caddy_data (project "llm-router-prod" by default),
+# so they never collide with the development volumes (llm-router_*). Nothing here ever removes a volume.
+
+name: llm-router-prod
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+x-hardening: &hardening
+  restart: unless-stopped
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop: [ALL]
+  logging: *logging
+
+x-api: &api
+  <<: *hardening
+  image: ${API_IMAGE:-llm-router-api:local}
+  build:
+    context: .
+    dockerfile: backend/Dockerfile
+  env_file:
+    - ${LLMR_APP_ENV_FILE:?LLMR_APP_ENV_FILE must point to the API settings file (see .env.production.example)}
+  environment:
+    # Values the topology decides; they override anything in app.env.
+    ENVIRONMENT: production
+    LLMR_DISABLE_ENV_FILE: "1"
+    HOST: 0.0.0.0
+    PORT: "8000"
+    POSTGRES_HOST: postgres
+    POSTGRES_PORT: "5432"
+    POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB must be set}
+    POSTGRES_USER: ${POSTGRES_APP_USER:?POSTGRES_APP_USER must be set}
+    POSTGRES_PASSWORD: ${POSTGRES_APP_PASSWORD:?POSTGRES_APP_PASSWORD must be set}
+    REDIS_ENABLED: "true"
+    REDIS_HOST: redis
+    REDIS_PORT: "6379"
+    REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD must be set}
+    # The edge proxy is the only trusted hop (fixed address on the edge network).
+    TRUST_PROXY_HEADERS: "true"
+    TRUSTED_PROXIES: '["${EDGE_PROXY_IP:-172.31.250.10}"]'
+  tmpfs:
+    - /tmp:size=64m,mode=1777
+  networks:
+    - internal
+    - edge
+  cpus: ${API_CPUS:-1.0}
+  mem_limit: ${API_MEM_LIMIT:-768m}
+  pids_limit: 256
+
+services:
+  redis:
+    <<: *hardening
+    image: redis:7.4.12-alpine
+    # Runs as the image's unprivileged `redis` user (uid 999 / gid 1000) from the start, with NO added
+    # capabilities: the entrypoint then skips its root-only chown pass. (Starting as root with cap_drop ALL
+    # breaks every restart: root cannot traverse the 0700 appendonlydir without CAP_DAC_OVERRIDE.)
+    # A fresh named volume inherits the image's /data ownership (999:1000).
+    user: "999:1000"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD must be set}
+      # redis-cli reads the password from REDISCLI_AUTH, so it never appears on a command line.
+      REDISCLI_AUTH: ${REDIS_PASSWORD:?REDIS_PASSWORD must be set}
+    # requirepass is fed on stdin ("redis-server -") from a here-document: the password is never in process
+    # arguments, and (unlike a pipe) `exec` replaces the shell, so redis-server is PID 1 and receives SIGTERM
+    # from `docker stop` for a clean shutdown (AOF flushed) instead of being SIGKILLed after the grace period.
+    # Memory: maxmemory 384mb inside a 512m container limit, policy noeviction. Redis REFUSES writes at the
+    # limit instead of silently evicting keys: budget counters/reservations, rate-limit windows and health state
+    # are never dropped (all cache entries have TTLs and per-scope caps). Alert on used_memory (DEPLOYMENT.md).
+    command:
+      - sh
+      - -c
+      - |-
+        exec docker-entrypoint.sh redis-server - \
+          --appendonly yes --appendfsync everysec --protected-mode yes \
+          --maxmemory ${REDIS_MAXMEMORY:-384mb} --maxmemory-policy noeviction <<EOF
+        requirepass $$REDIS_PASSWORD
+        EOF
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    volumes:
+      - redis_data:/data
+    tmpfs:
+      - /tmp:size=16m
+    networks: [internal]
+    cpus: ${REDIS_CPUS:-0.5}
+    mem_limit: ${REDIS_MEM_LIMIT:-512m}
+    pids_limit: 64
+
+  postgres:
+    <<: *hardening
+    image: postgres:16.15-alpine
+    # Runs as the image's unprivileged `postgres` user (uid/gid 70) from the start, with NO added capabilities:
+    # the entrypoint skips its root-only chown/gosu step. A fresh named volume inherits the image's ownership of
+    # /var/lib/postgresql/data (70:70); the init script must be readable by uid 70 (mode 0644 or 0755).
+    user: "70:70"
+    environment:
+      # Bootstrap/admin (superuser) role: operations only (backups, restores). Never given to the API.
+      POSTGRES_USER: ${POSTGRES_ADMIN_USER:?POSTGRES_ADMIN_USER must be set}
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?POSTGRES_ADMIN_PASSWORD must be set}
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB must be set}
+      # Application role + schema, created by infrastructure/postgres/init/10-app-role.sh on a FRESH volume.
+      POSTGRES_APP_USER: ${POSTGRES_APP_USER:?POSTGRES_APP_USER must be set}
+      POSTGRES_APP_PASSWORD: ${POSTGRES_APP_PASSWORD:?POSTGRES_APP_PASSWORD must be set}
+      POSTGRES_APP_SCHEMA: ${POSTGRES_APP_SCHEMA:-llm_router}
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/postgres/init:/docker-entrypoint-initdb.d:ro
+    tmpfs:
+      - /var/run/postgresql:size=4m,uid=70,gid=70,mode=0775
+      - /tmp:size=64m,uid=70,gid=70,mode=1777
+    shm_size: 256m
+    networks: [internal]
+    cpus: ${POSTGRES_CPUS:-1.0}
+    mem_limit: ${POSTGRES_MEM_LIMIT:-1g}
+    pids_limit: 256
+
+  api-1:
+    <<: *api
+    depends_on:
+      redis: {condition: service_healthy}
+      postgres: {condition: service_healthy}
+
+  # Started after api-1 is healthy, so a single instance applies pending migrations first
+  # (they are also serialised by a PostgreSQL advisory lock).
+  api-2:
+    <<: *api
+    depends_on:
+      redis: {condition: service_healthy}
+      postgres: {condition: service_healthy}
+      api-1: {condition: service_healthy}
+
+  web:
+    <<: *hardening
+    image: ${WEB_IMAGE:-llm-router-web:local}
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    tmpfs:
+      - /tmp:size=16m
+    networks: [edge]
+    cpus: ${WEB_CPUS:-0.25}
+    mem_limit: ${WEB_MEM_LIMIT:-128m}
+    pids_limit: 64
+
+  edge:
+    <<: *hardening
+    image: ${EDGE_IMAGE:-llm-router-edge:local}
+    build:
+      context: .
+      dockerfile: infrastructure/caddy/Dockerfile
+    environment:
+      LLMR_DOMAIN: ${LLMR_DOMAIN:?LLMR_DOMAIN must be set (your public hostname; localhost only for local tests)}
+    # Lets the unprivileged Caddy user bind 80/443 without any Linux capability.
+    sysctls:
+      net.ipv4.ip_unprivileged_port_start: "0"
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+      - "${HTTPS_PORT:-443}:443/udp"
+    volumes:
+      - caddy_data:/data
+    tmpfs:
+      - /config:size=4m,uid=10003,gid=10003
+      - /tmp:size=16m
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "443"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      web: {condition: service_healthy}
+      api-1: {condition: service_healthy}
+    networks:
+      edge:
+        ipv4_address: ${EDGE_PROXY_IP:-172.31.250.10}
+    cpus: ${EDGE_CPUS:-0.5}
+    mem_limit: ${EDGE_MEM_LIMIT:-256m}
+    pids_limit: 128
+
+  # Operations tooling, started only on demand:  --profile tools run --rm backup [scheduled|predeploy|manual]
+  backup:
+    <<: *hardening
+    restart: "no"
+    profiles: [tools]
+    image: ${BACKUP_IMAGE:-llm-router-backup:local}
+    build:
+      context: .
+      dockerfile: infrastructure/backup/Dockerfile
+    environment:
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGUSER: ${POSTGRES_ADMIN_USER:?POSTGRES_ADMIN_USER must be set}
+      PGPASSWORD: ${POSTGRES_ADMIN_PASSWORD:?POSTGRES_ADMIN_PASSWORD must be set}
+      PGDATABASE: ${POSTGRES_DB:?POSTGRES_DB must be set}
+      AGE_RECIPIENT: ${BACKUP_AGE_RECIPIENT:-}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-14}
+      PREDEPLOY_RETENTION_DAYS: ${PREDEPLOY_RETENTION_DAYS:-30}
+      BACKUP_MIN_KEEP: ${BACKUP_MIN_KEEP:-7}
+    volumes:
+      - ${BACKUP_DIR:-./backups}:/backups
+    tmpfs:
+      - /tmp:size=${BACKUP_TMPFS_SIZE:-512m},uid=70,gid=70,mode=0700
+    depends_on:
+      postgres: {condition: service_healthy}
+    networks: [internal]
+
+networks:
+  edge:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${EDGE_SUBNET:-172.31.250.0/24}
+  internal:
+    driver: bridge
+    internal: true
+
+volumes:
+  postgres_data:
+  redis_data:
+  caddy_data:

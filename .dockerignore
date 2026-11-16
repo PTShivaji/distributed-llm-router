@@ -1,0 +1,55 @@
+# Build context for backend/Dockerfile, frontend/Dockerfile and infrastructure/*/Dockerfile (context = repo root).
+# ALLOWLIST: everything is excluded, then only what the images need is re-included, and secrets,
+# caches and local artifacts inside those paths are excluded again (later rules win).
+
+*
+
+# --- backend image: runtime code + runtime dependency list only (no tests, benchmarks, examples) ---
+!requirements.txt
+!backend/app/
+
+# --- frontend image: sources, configs, lockfile, tests (the build stage runs typecheck/lint/tests) ---
+!frontend/
+
+# --- infrastructure: Caddy configs, database init, backup tooling ---
+!infrastructure/
+
+# ---------------------------------------------------------------------------
+# Re-exclude inside the allowed paths. NEVER send real environment files or secrets.
+# ---------------------------------------------------------------------------
+**/.env
+**/.env.*
+**/*.env
+!**/.env.example
+!**/*.env.example
+**/secrets/
+**/*.pem
+**/*.key
+**/*.crt
+**/*.age
+**/*.gpg
+**/age-key*.txt
+**/backups/
+**/*.dump
+
+# Python caches / local tooling
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# Node / build output (the frontend image builds dist/ itself from source)
+frontend/node_modules/
+frontend/dist/
+frontend/coverage/
+**/*.tsbuildinfo
+**/.vite/
+
+# Logs, temp, editor and OS files
+**/*.log
+**/*.tmp
+**/tmp/
+**/.DS_Store
+**/.idea/
+**/.vscode/

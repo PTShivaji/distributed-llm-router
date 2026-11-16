@@ -1,0 +1,32 @@
+# Line endings: the repository stores LF and every checkout (Windows included) gets LF.
+# This overrides a local core.autocrlf=true. Existing CRLF working copies are normalised to
+# LF when they are next added; nothing in the working tree is rewritten by this file alone.
+* text=auto eol=lf
+
+# Must stay LF on every OS: these run inside Linux containers / Linux shells.
+*.sh          text eol=lf
+Dockerfile    text eol=lf
+Caddyfile     text eol=lf
+*.Caddyfile   text eol=lf
+*.yml         text eol=lf
+*.yaml        text eol=lf
+
+# Windows-only scripts (none today) keep CRLF if they are ever added.
+*.bat         text eol=crlf
+*.cmd         text eol=crlf
+*.ps1         text eol=crlf
+
+# Binary assets: never normalised or diffed as text.
+*.png         binary
+*.jpg         binary
+*.jpeg        binary
+*.gif         binary
+*.ico         binary
+*.webp        binary
+*.woff        binary
+*.woff2       binary
+*.pdf         binary
+
+# Generated files (CI's openapi-drift job checks they match the backend).
+frontend/src/api/openapi.json   linguist-generated=true
+frontend/src/api/schema.gen.ts  linguist-generated=true

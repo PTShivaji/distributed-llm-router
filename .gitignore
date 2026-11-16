@@ -1,0 +1,62 @@
+# ---------------------------------------------------------------------------
+# Secrets and real configuration: NEVER commit. Only the *.example templates are tracked.
+# ---------------------------------------------------------------------------
+.env
+.env.*
+*.env
+!.env.example
+!.env.production.example
+!*.env.example
+# deploy-time secret material
+secrets/
+*.pem
+*.key
+*.crt
+*.p12
+*.age
+*.gpg
+age-key*.txt
+# SSH private keys (and their .pub siblings) and PuTTY keys
+id_rsa*
+id_ed25519*
+*.ppk
+# local backup output (dumps are sensitive even when encrypted)
+backups/
+*.dump
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+backend/benchmarks/results/
+
+# ---------------------------------------------------------------------------
+# Node / frontend (frontend/.gitignore adds its own rules too)
+# ---------------------------------------------------------------------------
+node_modules/
+frontend/dist/
+frontend/coverage/
+*.tsbuildinfo
+.vite/
+
+# ---------------------------------------------------------------------------
+# Logs, temp files, editors, OS
+# ---------------------------------------------------------------------------
+*.log
+*.tmp
+*.swp
+tmp/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

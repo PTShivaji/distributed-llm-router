@@ -1,0 +1,109 @@
+# Edge reverse proxy (the ONLY public entry point). Built into the llm-router-edge image.
+#
+#   LLMR_DOMAIN       public hostname, e.g. router.example.com -> automatic HTTPS via ACME (Let's Encrypt/ZeroSSL).
+#                     "localhost" (the default) -> certificate from Caddy's local internal CA (local testing only).
+#   API_UPSTREAMS     space-separated backend addresses (default "api-1:8000 api-2:8000").
+#   WEB_UPSTREAM      static frontend server (default "web:8080").
+#
+# HTTP (port 80) redirects to HTTPS automatically. Certificates/ACME account live in /data (persistent volume).
+{
+	admin off
+	persist_config off
+	# Never try to add the local CA to the container's system trust store (read-only rootfs, no root).
+	skip_install_trust
+	# The rate_limit handler comes from github.com/mholt/caddy-ratelimit (see infrastructure/caddy/Dockerfile).
+	order rate_limit before basic_auth
+	# Credentials are never logged: Caddy redacts Authorization/Cookie by default (the `log_credentials`
+	# server option, which would disable that, is deliberately NOT set) and the log filter below deletes them.
+}
+
+{$LLMR_DOMAIN:localhost} {
+	# --------------------------------------------------------------- request limits
+	# Same 1 MiB cap as the API (MAX_REQUEST_BODY_BYTES); oversized bodies stop here.
+	request_body {
+		max_size 1MiB
+	}
+
+	# Per client IP, sliding window. Chat is ALSO limited per API key by the backend (Redis, all instances).
+	# /api/v1/classify is public and CPU-bound, so it has its own, tighter limit. Static files are not limited.
+	# Behind another load balancer/CDN, configure `servers { trusted_proxies ... }` and key on {client_ip}.
+	rate_limit {
+		zone classify {
+			match {
+				path /api/v1/classify
+			}
+			key {remote_host}
+			events 60
+			window 1m
+		}
+		zone api {
+			match {
+				path /api/* /health/dependencies /metrics
+			}
+			key {remote_host}
+			events 600
+			window 1m
+		}
+	}
+
+	encode zstd gzip
+
+	# --------------------------------------------------------------- security headers (every response)
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		# "?" = only when the upstream did not set it: the API sends its own (stricter) values.
+		?X-Content-Type-Options "nosniff"
+		?X-Frame-Options "DENY"
+		?Referrer-Policy "no-referrer"
+		?Cross-Origin-Opener-Policy "same-origin"
+		?Cross-Origin-Resource-Policy "same-origin"
+		?Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()"
+		-Server
+		-X-Powered-By
+	}
+
+	# Content-Security-Policy for the frontend (the API sets its own CSP on /api responses).
+	# Verified against the built app: same-origin scripts/styles/assets only, no inline scripts,
+	# no eval, no web fonts, no third-party origins; XHR goes to the same origin.
+	@frontend not path /api/* /health /health/* /metrics
+	header @frontend Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+
+	# --------------------------------------------------------------- routing
+	# Backend: API, liveness, and token-protected readiness/metrics (needed by the Observability page).
+	@backend path /api/* /health /health/* /metrics
+	handle @backend {
+		reverse_proxy {$API_UPSTREAMS:api-1:8000 api-2:8000} {
+			lb_policy round_robin
+			# Only retries when a backend could not be reached (the request was never sent),
+			# so a paid chat request is never sent twice.
+			lb_try_duration 5s
+			health_uri /health
+			health_interval 10s
+			health_timeout 3s
+			health_status 200
+			# Caddy REPLACES client-supplied X-Forwarded-For with the real peer address (no trusted_proxies set),
+			# so the API's TRUSTED_PROXIES can safely trust this proxy only.
+		}
+	}
+
+	handle {
+		reverse_proxy {$WEB_UPSTREAM:web:8080} {
+			health_uri /
+			health_interval 15s
+		}
+	}
+
+	# --------------------------------------------------------------- access log (JSON, no credentials)
+	log {
+		output stdout
+		format filter {
+			wrap json
+			fields {
+				request>headers>Authorization delete
+				request>headers>Proxy-Authorization delete
+				request>headers>Cookie delete
+				resp_headers>Set-Cookie delete
+			}
+		}
+	}
+}

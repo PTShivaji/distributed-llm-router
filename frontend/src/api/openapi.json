@@ -1,0 +1,3762 @@
+{
+  "components": {
+    "schemas": {
+      "AnalyticsSummaryResponse": {
+        "properties": {
+          "average_latency_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Average Latency Ms"
+          },
+          "cache_hit_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cache Hit Rate"
+          },
+          "cache_hits": {
+            "title": "Cache Hits",
+            "type": "integer"
+          },
+          "cache_misses": {
+            "title": "Cache Misses",
+            "type": "integer"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End"
+          },
+          "estimated_total_cost": {
+            "description": "Sum of estimated costs (placeholder pricing in mock mode).",
+            "title": "Estimated Total Cost",
+            "type": "number"
+          },
+          "failed_requests": {
+            "title": "Failed Requests",
+            "type": "integer"
+          },
+          "fallback_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fallback Rate"
+          },
+          "fallback_requests": {
+            "title": "Fallback Requests",
+            "type": "integer"
+          },
+          "provider_attempts": {
+            "items": {
+              "$ref": "#/components/schemas/ProviderCount"
+            },
+            "title": "Provider Attempts",
+            "type": "array"
+          },
+          "requests_by_complexity": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Requests By Complexity",
+            "type": "object"
+          },
+          "requests_by_model": {
+            "items": {
+              "$ref": "#/components/schemas/ModelCount"
+            },
+            "title": "Requests By Model",
+            "type": "array"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          },
+          "successful_requests": {
+            "title": "Successful Requests",
+            "type": "integer"
+          },
+          "total_input_tokens": {
+            "title": "Total Input Tokens",
+            "type": "integer"
+          },
+          "total_output_tokens": {
+            "title": "Total Output Tokens",
+            "type": "integer"
+          },
+          "total_requests": {
+            "title": "Total Requests",
+            "type": "integer"
+          },
+          "total_tokens": {
+            "title": "Total Tokens",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "total_requests",
+          "successful_requests",
+          "failed_requests",
+          "total_input_tokens",
+          "total_output_tokens",
+          "total_tokens",
+          "estimated_total_cost",
+          "average_latency_ms",
+          "cache_hits",
+          "cache_misses",
+          "cache_hit_rate",
+          "fallback_requests",
+          "fallback_rate",
+          "requests_by_complexity",
+          "requests_by_model",
+          "provider_attempts"
+        ],
+        "title": "AnalyticsSummaryResponse",
+        "type": "object"
+      },
+      "AppInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "debug": {
+            "title": "Debug",
+            "type": "boolean"
+          },
+          "environment": {
+            "title": "Environment",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "uptime_seconds": {
+            "description": "Seconds since this API process started (per instance).",
+            "title": "Uptime Seconds",
+            "type": "number"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "version",
+          "environment",
+          "debug",
+          "uptime_seconds"
+        ],
+        "title": "AppInfo",
+        "type": "object"
+      },
+      "AttemptOut": {
+        "properties": {
+          "attempt_number": {
+            "title": "Attempt Number",
+            "type": "integer"
+          },
+          "error_kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Kind"
+          },
+          "latency_ms": {
+            "title": "Latency Ms",
+            "type": "number"
+          },
+          "model_id": {
+            "title": "Model Id",
+            "type": "string"
+          },
+          "outcome": {
+            "title": "Outcome",
+            "type": "string"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "retryable": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retryable"
+          }
+        },
+        "required": [
+          "attempt_number",
+          "model_id",
+          "provider",
+          "outcome",
+          "error_kind",
+          "retryable",
+          "latency_ms"
+        ],
+        "title": "AttemptOut",
+        "type": "object"
+      },
+      "AuthInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "admin_endpoints_enabled": {
+            "description": "True when ADMIN_API_TOKEN is set; otherwise admin endpoints are disabled.",
+            "title": "Admin Endpoints Enabled",
+            "type": "boolean"
+          },
+          "chat_auth_mode": {
+            "title": "Chat Auth Mode",
+            "type": "string"
+          },
+          "chat_clients_configured": {
+            "description": "Number of chat API clients (names and keys are not exposed).",
+            "title": "Chat Clients Configured",
+            "type": "integer"
+          },
+          "client_id_hashing": {
+            "description": "hmac when CLIENT_ID_HASH_KEY is set, otherwise plain SHA-256.",
+            "enum": [
+              "hmac",
+              "sha256"
+            ],
+            "title": "Client Id Hashing",
+            "type": "string"
+          },
+          "observability_token_required": {
+            "title": "Observability Token Required",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "chat_auth_mode",
+          "chat_clients_configured",
+          "observability_token_required",
+          "admin_endpoints_enabled",
+          "client_id_hashing"
+        ],
+        "title": "AuthInfo",
+        "type": "object"
+      },
+      "BudgetEnforcement": {
+        "additionalProperties": false,
+        "properties": {
+          "applies_to": {
+            "title": "Applies To",
+            "type": "string"
+          },
+          "configured": {
+            "description": "At least one spend limit is set.",
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "currently_applicable": {
+            "description": "Limits can only be reached when real provider calls or paid embeddings are enabled.",
+            "title": "Currently Applicable",
+            "type": "boolean"
+          },
+          "daily_tracking": {
+            "description": "Daily counters are maintained (a daily USD or token limit is set).",
+            "title": "Daily Tracking",
+            "type": "boolean"
+          },
+          "fail_closed": {
+            "title": "Fail Closed",
+            "type": "boolean"
+          },
+          "mock_mode": {
+            "title": "Mock Mode",
+            "type": "boolean"
+          },
+          "paid_embeddings_enabled": {
+            "title": "Paid Embeddings Enabled",
+            "type": "boolean"
+          },
+          "real_provider_calls_enabled": {
+            "title": "Real Provider Calls Enabled",
+            "type": "boolean"
+          },
+          "store": {
+            "anyOf": [
+              {
+                "enum": [
+                  "redis",
+                  "memory"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null when no budget guard is active.",
+            "title": "Store"
+          },
+          "store_scope": {
+            "anyOf": [
+              {
+                "enum": [
+                  "shared_across_instances",
+                  "this_process_only"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Scope"
+          }
+        },
+        "required": [
+          "configured",
+          "daily_tracking",
+          "applies_to",
+          "currently_applicable",
+          "mock_mode",
+          "real_provider_calls_enabled",
+          "paid_embeddings_enabled",
+          "fail_closed",
+          "store",
+          "store_scope"
+        ],
+        "title": "BudgetEnforcement",
+        "type": "object"
+      },
+      "BudgetInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "applies_to": {
+            "title": "Applies To",
+            "type": "string"
+          },
+          "configured": {
+            "description": "True when at least one spend limit is set.",
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "daily_tokens_per_client": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null = not configured.",
+            "title": "Daily Tokens Per Client"
+          },
+          "daily_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null = not configured.",
+            "title": "Daily Usd"
+          },
+          "daily_usd_per_client": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null = not configured.",
+            "title": "Daily Usd Per Client"
+          },
+          "fail_closed": {
+            "title": "Fail Closed",
+            "type": "boolean"
+          },
+          "max_cost_per_request_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null = not configured.",
+            "title": "Max Cost Per Request Usd"
+          },
+          "monthly_limit_supported": {
+            "const": false,
+            "default": false,
+            "description": "The backend has no monthly spend limit; only daily limits exist.",
+            "title": "Monthly Limit Supported",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "configured",
+          "applies_to",
+          "daily_usd",
+          "daily_usd_per_client",
+          "daily_tokens_per_client",
+          "max_cost_per_request_usd",
+          "fail_closed"
+        ],
+        "title": "BudgetInfo",
+        "type": "object"
+      },
+      "BudgetLimitsOut": {
+        "additionalProperties": false,
+        "properties": {
+          "daily_tokens_per_client": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null = not configured.",
+            "title": "Daily Tokens Per Client"
+          },
+          "daily_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Global daily limit; null = not configured.",
+            "title": "Daily Usd"
+          },
+          "daily_usd_per_client": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null = not configured.",
+            "title": "Daily Usd Per Client"
+          },
+          "max_cost_per_request_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Worst-case cap per request; null = not configured.",
+            "title": "Max Cost Per Request Usd"
+          }
+        },
+        "required": [
+          "daily_usd",
+          "daily_usd_per_client",
+          "daily_tokens_per_client",
+          "max_cost_per_request_usd"
+        ],
+        "title": "BudgetLimitsOut",
+        "type": "object"
+      },
+      "BudgetMonthly": {
+        "additionalProperties": false,
+        "properties": {
+          "enforcement_supported": {
+            "const": false,
+            "default": false,
+            "title": "Enforcement Supported",
+            "type": "boolean"
+          },
+          "limit_usd": {
+            "title": "Limit Usd",
+            "type": "null"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          }
+        },
+        "required": [
+          "note"
+        ],
+        "title": "BudgetMonthly",
+        "type": "object"
+      },
+      "BudgetPeriod": {
+        "additionalProperties": false,
+        "properties": {
+          "day": {
+            "description": "Current budget day (UTC).",
+            "format": "date",
+            "title": "Day",
+            "type": "string"
+          },
+          "granularity": {
+            "const": "day",
+            "default": "day",
+            "title": "Granularity",
+            "type": "string"
+          },
+          "resets_at": {
+            "description": "Next UTC midnight: daily counters start from zero for the new day.",
+            "format": "date-time",
+            "title": "Resets At",
+            "type": "string"
+          },
+          "starts_at": {
+            "format": "date-time",
+            "title": "Starts At",
+            "type": "string"
+          },
+          "timezone": {
+            "const": "UTC",
+            "default": "UTC",
+            "title": "Timezone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "day",
+          "starts_at",
+          "resets_at"
+        ],
+        "title": "BudgetPeriod",
+        "type": "object"
+      },
+      "BudgetRefusalsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "by_provider": {
+            "items": {
+              "$ref": "#/components/schemas/RefusalCount"
+            },
+            "title": "By Provider",
+            "type": "array"
+          },
+          "by_reason": {
+            "items": {
+              "$ref": "#/components/schemas/RefusalCount"
+            },
+            "title": "By Reason",
+            "type": "array"
+          },
+          "embedding_refusals_persisted": {
+            "const": false,
+            "default": false,
+            "title": "Embedding Refusals Persisted",
+            "type": "boolean"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/RefusalEvent"
+            },
+            "title": "Events",
+            "type": "array"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Notes",
+            "type": "array"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          },
+          "persisted_scope": {
+            "title": "Persisted Scope",
+            "type": "string"
+          },
+          "process_chat_refusals": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ProcessCounterGroup"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "This process since start (not durable); null when metrics are disabled.",
+            "title": "Process Chat Refusals"
+          },
+          "process_counters_available": {
+            "title": "Process Counters Available",
+            "type": "boolean"
+          },
+          "process_embedding_refusals": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ProcessCounterGroup"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Process Embedding Refusals"
+          },
+          "refused_requests": {
+            "description": "Requests that failed with budget_exceeded or budget_unavailable.",
+            "title": "Refused Requests",
+            "type": "integer"
+          },
+          "source": {
+            "const": "request_history",
+            "default": "request_history",
+            "title": "Source",
+            "type": "string"
+          },
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "timezone": {
+            "const": "UTC",
+            "default": "UTC",
+            "title": "Timezone",
+            "type": "string"
+          },
+          "total_refused_attempts": {
+            "title": "Total Refused Attempts",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "persisted_scope",
+          "total_refused_attempts",
+          "refused_requests",
+          "by_reason",
+          "by_provider",
+          "events",
+          "pagination",
+          "process_counters_available",
+          "process_chat_refusals",
+          "process_embedding_refusals",
+          "notes"
+        ],
+        "title": "BudgetRefusalsResponse",
+        "type": "object"
+      },
+      "BudgetSpendResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "by_model": {
+            "items": {
+              "$ref": "#/components/schemas/SpendGroup"
+            },
+            "title": "By Model",
+            "type": "array"
+          },
+          "by_model_truncated": {
+            "title": "By Model Truncated",
+            "type": "boolean"
+          },
+          "by_provider": {
+            "items": {
+              "$ref": "#/components/schemas/SpendGroup"
+            },
+            "title": "By Provider",
+            "type": "array"
+          },
+          "by_provider_truncated": {
+            "title": "By Provider Truncated",
+            "type": "boolean"
+          },
+          "cost_basis": {
+            "title": "Cost Basis",
+            "type": "string"
+          },
+          "currency": {
+            "const": "USD",
+            "default": "USD",
+            "title": "Currency",
+            "type": "string"
+          },
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/SpendDay"
+            },
+            "title": "Days",
+            "type": "array"
+          },
+          "embedding_spend_included": {
+            "const": false,
+            "default": false,
+            "title": "Embedding Spend Included",
+            "type": "boolean"
+          },
+          "end_date": {
+            "description": "Inclusive (UTC days).",
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Notes",
+            "type": "array"
+          },
+          "source": {
+            "const": "request_history",
+            "default": "request_history",
+            "title": "Source",
+            "type": "string"
+          },
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "timezone": {
+            "const": "UTC",
+            "default": "UTC",
+            "title": "Timezone",
+            "type": "string"
+          },
+          "totals": {
+            "$ref": "#/components/schemas/SpendFigures"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "cost_basis",
+          "totals",
+          "days",
+          "by_provider",
+          "by_provider_truncated",
+          "by_model",
+          "by_model_truncated",
+          "notes"
+        ],
+        "title": "BudgetSpendResponse",
+        "type": "object"
+      },
+      "BudgetStatusResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "embedding": {
+            "$ref": "#/components/schemas/EmbeddingBudgetOut"
+          },
+          "enforcement": {
+            "$ref": "#/components/schemas/BudgetEnforcement"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/BudgetLimitsOut"
+          },
+          "monthly": {
+            "$ref": "#/components/schemas/BudgetMonthly"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Notes",
+            "type": "array"
+          },
+          "period": {
+            "$ref": "#/components/schemas/BudgetPeriod"
+          },
+          "today": {
+            "$ref": "#/components/schemas/BudgetToday"
+          }
+        },
+        "required": [
+          "period",
+          "enforcement",
+          "limits",
+          "today",
+          "monthly",
+          "embedding",
+          "notes"
+        ],
+        "title": "BudgetStatusResponse",
+        "type": "object"
+      },
+      "BudgetToday": {
+        "additionalProperties": false,
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "counted_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Global amount counted against today's limits; null = unknown.",
+            "title": "Counted Usd"
+          },
+          "per_client_counters_exposed": {
+            "const": false,
+            "default": false,
+            "description": "Per-client counters exist but are never exposed (client identities).",
+            "title": "Per Client Counters Exposed",
+            "type": "boolean"
+          },
+          "remaining_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "daily_usd - counted_usd (never below 0); null when no global daily limit or unknown.",
+            "title": "Remaining Usd"
+          },
+          "source": {
+            "const": "budget_counters",
+            "default": "budget_counters",
+            "title": "Source",
+            "type": "string"
+          },
+          "unavailable_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unavailable Reason"
+          }
+        },
+        "required": [
+          "available",
+          "counted_usd",
+          "remaining_usd",
+          "unavailable_reason"
+        ],
+        "title": "BudgetToday",
+        "type": "object"
+      },
+      "CacheClearResponse": {
+        "properties": {
+          "cleared": {
+            "title": "Cleared",
+            "type": "boolean"
+          },
+          "deleted_keys": {
+            "title": "Deleted Keys",
+            "type": "integer"
+          },
+          "reset_stats": {
+            "title": "Reset Stats",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "cleared",
+          "deleted_keys",
+          "reset_stats"
+        ],
+        "title": "CacheClearResponse",
+        "type": "object"
+      },
+      "CacheInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "embedding_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null when the local embedder is used (no model name).",
+            "title": "Embedding Model"
+          },
+          "embedding_pricing_is_placeholder": {
+            "title": "Embedding Pricing Is Placeholder",
+            "type": "boolean"
+          },
+          "embedding_provider": {
+            "title": "Embedding Provider",
+            "type": "string"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "max_entries_per_scope": {
+            "title": "Max Entries Per Scope",
+            "type": "integer"
+          },
+          "semantic_allow_lexical": {
+            "title": "Semantic Allow Lexical",
+            "type": "boolean"
+          },
+          "semantic_enabled": {
+            "title": "Semantic Enabled",
+            "type": "boolean"
+          },
+          "similarity_threshold": {
+            "title": "Similarity Threshold",
+            "type": "number"
+          },
+          "ttl_seconds": {
+            "title": "Ttl Seconds",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "enabled",
+          "semantic_enabled",
+          "semantic_allow_lexical",
+          "ttl_seconds",
+          "similarity_threshold",
+          "max_entries_per_scope",
+          "embedding_provider",
+          "embedding_model",
+          "embedding_pricing_is_placeholder"
+        ],
+        "title": "CacheInfo",
+        "type": "object"
+      },
+      "CacheOut": {
+        "properties": {
+          "age_seconds": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Age Seconds"
+          },
+          "embedding_provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Embedding Provider"
+          },
+          "lookup_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lookup Ms"
+          },
+          "saved_cost": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saved Cost"
+          },
+          "saved_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saved Tokens"
+          },
+          "similarity": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Similarity"
+          },
+          "source_request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Request Id"
+          },
+          "status": {
+            "description": "disabled | bypass | miss | hit_exact | hit_semantic | error",
+            "title": "Status",
+            "type": "string"
+          },
+          "stored": {
+            "default": false,
+            "title": "Stored",
+            "type": "boolean"
+          },
+          "threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Threshold"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "CacheOut",
+        "type": "object"
+      },
+      "CacheStatsResponse": {
+        "properties": {
+          "approx_storage_bytes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approx Storage Bytes"
+          },
+          "available": {
+            "description": "False when Redis is unreachable.",
+            "title": "Available",
+            "type": "boolean"
+          },
+          "embedding_is_semantic": {
+            "description": "False for the local lexical hashing embedder.",
+            "title": "Embedding Is Semantic",
+            "type": "boolean"
+          },
+          "embedding_provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Embedding Provider"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "hit_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hit Rate"
+          },
+          "hits": {
+            "title": "Hits",
+            "type": "integer"
+          },
+          "hits_exact": {
+            "title": "Hits Exact",
+            "type": "integer"
+          },
+          "hits_semantic": {
+            "title": "Hits Semantic",
+            "type": "integer"
+          },
+          "misses": {
+            "title": "Misses",
+            "type": "integer"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Notes",
+            "type": "array"
+          },
+          "scopes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scopes"
+          },
+          "semantic_enabled": {
+            "title": "Semantic Enabled",
+            "type": "boolean"
+          },
+          "similarity_threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Similarity Threshold"
+          },
+          "stores": {
+            "title": "Stores",
+            "type": "integer"
+          },
+          "total_entries": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Entries"
+          },
+          "ttl_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ttl Seconds"
+          }
+        },
+        "required": [
+          "enabled",
+          "semantic_enabled",
+          "available",
+          "embedding_provider",
+          "embedding_is_semantic",
+          "similarity_threshold",
+          "ttl_seconds",
+          "total_entries",
+          "scopes",
+          "hits",
+          "hits_exact",
+          "hits_semantic",
+          "misses",
+          "stores",
+          "hit_rate",
+          "approx_storage_bytes",
+          "notes"
+        ],
+        "title": "CacheStatsResponse",
+        "type": "object"
+      },
+      "ChatRequest": {
+        "additionalProperties": false,
+        "description": "Inherits `query` validation (1..10,000 chars, not blank, no extra fields).",
+        "properties": {
+          "max_output_tokens": {
+            "anyOf": [
+              {
+                "maximum": 32000.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Output Tokens"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,99}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional override: a registered, enabled model id.",
+            "title": "Model"
+          },
+          "query": {
+            "examples": [
+              "Explain Python variables"
+            ],
+            "maxLength": 10000,
+            "minLength": 1,
+            "title": "Query",
+            "type": "string"
+          },
+          "temperature": {
+            "anyOf": [
+              {
+                "maximum": 2.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature"
+          },
+          "use_cache": {
+            "default": true,
+            "description": "false = skip the response cache for this request.",
+            "title": "Use Cache",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "ChatRequest",
+        "type": "object"
+      },
+      "ChatResponse": {
+        "properties": {
+          "answer": {
+            "title": "Answer",
+            "type": "string"
+          },
+          "cache": {
+            "$ref": "#/components/schemas/CacheOut"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/ClassifyResponse"
+          },
+          "cost": {
+            "$ref": "#/components/schemas/CostOut"
+          },
+          "fallback": {
+            "$ref": "#/components/schemas/FallbackOut"
+          },
+          "finish_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finish Reason"
+          },
+          "latency_ms": {
+            "title": "Latency Ms",
+            "type": "number"
+          },
+          "mock_mode": {
+            "title": "Mock Mode",
+            "type": "boolean"
+          },
+          "model_used": {
+            "title": "Model Used",
+            "type": "string"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "provider_adapter": {
+            "title": "Provider Adapter",
+            "type": "string"
+          },
+          "provider_model": {
+            "title": "Provider Model",
+            "type": "string"
+          },
+          "provider_status": {
+            "title": "Provider Status",
+            "type": "string"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          },
+          "routing": {
+            "$ref": "#/components/schemas/RoutingOut"
+          },
+          "selected_model": {
+            "title": "Selected Model",
+            "type": "string"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/UsageOut"
+          }
+        },
+        "required": [
+          "request_id",
+          "answer",
+          "classification",
+          "selected_model",
+          "model_used",
+          "provider",
+          "provider_adapter",
+          "provider_model",
+          "finish_reason",
+          "routing",
+          "fallback",
+          "usage",
+          "cost",
+          "latency_ms",
+          "provider_status",
+          "mock_mode",
+          "cache"
+        ],
+        "title": "ChatResponse",
+        "type": "object"
+      },
+      "ClassifyRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "description": "The user query to classify.",
+            "examples": [
+              "Design a fault-tolerant distributed cache and compare consistency trade-offs."
+            ],
+            "maxLength": 10000,
+            "minLength": 1,
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "ClassifyRequest",
+        "type": "object"
+      },
+      "ClassifyResponse": {
+        "properties": {
+          "classifier_version": {
+            "title": "Classifier Version",
+            "type": "string"
+          },
+          "complexity": {
+            "$ref": "#/components/schemas/ComplexityLevel"
+          },
+          "complexity_score": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Complexity Score",
+            "type": "number"
+          },
+          "confidence": {
+            "description": "Certainty in the complexity level.",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "features": {
+            "$ref": "#/components/schemas/FeaturesOut"
+          },
+          "intent": {
+            "$ref": "#/components/schemas/IntentOut"
+          },
+          "reasoning": {
+            "$ref": "#/components/schemas/ReasoningOut"
+          },
+          "technical": {
+            "$ref": "#/components/schemas/TechnicalOut"
+          },
+          "thresholds": {
+            "$ref": "#/components/schemas/ThresholdsOut"
+          }
+        },
+        "required": [
+          "complexity",
+          "confidence",
+          "complexity_score",
+          "thresholds",
+          "intent",
+          "reasoning",
+          "technical",
+          "features",
+          "explanation",
+          "classifier_version"
+        ],
+        "title": "ClassifyResponse",
+        "type": "object"
+      },
+      "ComplexityLevel": {
+        "enum": [
+          "SIMPLE",
+          "MEDIUM",
+          "COMPLEX"
+        ],
+        "title": "ComplexityLevel",
+        "type": "string"
+      },
+      "ConfigIssueOut": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "description": "Fixed description of the problem; never contains values.",
+            "title": "Message",
+            "type": "string"
+          },
+          "setting": {
+            "description": "Environment variable name (no client names or values).",
+            "title": "Setting",
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "error",
+              "warning"
+            ],
+            "title": "Severity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "setting",
+          "severity",
+          "message"
+        ],
+        "title": "ConfigIssueOut",
+        "type": "object"
+      },
+      "CostOut": {
+        "properties": {
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "input_cost": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Cost"
+          },
+          "input_cost_per_million": {
+            "title": "Input Cost Per Million",
+            "type": "number"
+          },
+          "is_estimate": {
+            "default": true,
+            "title": "Is Estimate",
+            "type": "boolean"
+          },
+          "output_cost": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Cost"
+          },
+          "output_cost_per_million": {
+            "title": "Output Cost Per Million",
+            "type": "number"
+          },
+          "pricing_is_placeholder": {
+            "title": "Pricing Is Placeholder",
+            "type": "boolean"
+          },
+          "total_cost": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Cost"
+          }
+        },
+        "required": [
+          "input_cost",
+          "output_cost",
+          "total_cost",
+          "currency",
+          "input_cost_per_million",
+          "output_cost_per_million",
+          "pricing_is_placeholder"
+        ],
+        "title": "CostOut",
+        "type": "object"
+      },
+      "DependenciesResponse": {
+        "properties": {
+          "cache_enabled": {
+            "title": "Cache Enabled",
+            "type": "boolean"
+          },
+          "database": {
+            "$ref": "#/components/schemas/DependencyStatus"
+          },
+          "health_backend": {
+            "title": "Health Backend",
+            "type": "string"
+          },
+          "persistence": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Persistence",
+            "type": "object"
+          },
+          "rate_limit_enabled": {
+            "title": "Rate Limit Enabled",
+            "type": "boolean"
+          },
+          "redis": {
+            "$ref": "#/components/schemas/DependencyStatus"
+          }
+        },
+        "required": [
+          "redis",
+          "database",
+          "cache_enabled",
+          "rate_limit_enabled",
+          "health_backend",
+          "persistence"
+        ],
+        "title": "DependenciesResponse",
+        "type": "object"
+      },
+      "DependencyStatus": {
+        "properties": {
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "reachable": {
+            "title": "Reachable",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled",
+          "reachable"
+        ],
+        "title": "DependencyStatus",
+        "type": "object"
+      },
+      "EmbeddingBudgetOut": {
+        "additionalProperties": false,
+        "properties": {
+          "budgeted": {
+            "description": "Paid embeddings reserve against the same daily counters as chat.",
+            "title": "Budgeted",
+            "type": "boolean"
+          },
+          "paid": {
+            "description": "True for EMBEDDING_PROVIDER=litellm; the local embedder is free.",
+            "title": "Paid",
+            "type": "boolean"
+          },
+          "persisted_history": {
+            "const": false,
+            "default": false,
+            "description": "Embedding spend is never written to the request history.",
+            "title": "Persisted History",
+            "type": "boolean"
+          },
+          "process_counters_available": {
+            "description": "False when METRICS_ENABLED=false.",
+            "title": "Process Counters Available",
+            "type": "boolean"
+          },
+          "process_estimated_cost_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "This process since start; null when metrics are disabled.",
+            "title": "Process Estimated Cost Usd"
+          },
+          "process_events": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ProcessCounterGroup"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Process Events"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "paid",
+          "budgeted",
+          "process_counters_available",
+          "process_estimated_cost_usd",
+          "process_events"
+        ],
+        "title": "EmbeddingBudgetOut",
+        "type": "object"
+      },
+      "FallbackOut": {
+        "properties": {
+          "attempts": {
+            "items": {
+              "$ref": "#/components/schemas/AttemptOut"
+            },
+            "title": "Attempts",
+            "type": "array"
+          },
+          "chain": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Chain",
+            "type": "array"
+          },
+          "final_model": {
+            "title": "Final Model",
+            "type": "string"
+          },
+          "original_model": {
+            "title": "Original Model",
+            "type": "string"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "used": {
+            "title": "Used",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "used",
+          "original_model",
+          "final_model",
+          "chain",
+          "attempts",
+          "reason"
+        ],
+        "title": "FallbackOut",
+        "type": "object"
+      },
+      "FeaturesOut": {
+        "properties": {
+          "char_count": {
+            "title": "Char Count",
+            "type": "integer"
+          },
+          "code_line_count": {
+            "title": "Code Line Count",
+            "type": "integer"
+          },
+          "has_code": {
+            "title": "Has Code",
+            "type": "boolean"
+          },
+          "has_code_block": {
+            "title": "Has Code Block",
+            "type": "boolean"
+          },
+          "inline_code_count": {
+            "title": "Inline Code Count",
+            "type": "integer"
+          },
+          "line_count": {
+            "title": "Line Count",
+            "type": "integer"
+          },
+          "list_item_count": {
+            "title": "List Item Count",
+            "type": "integer"
+          },
+          "question_count": {
+            "title": "Question Count",
+            "type": "integer"
+          },
+          "sentence_count": {
+            "title": "Sentence Count",
+            "type": "integer"
+          },
+          "word_count": {
+            "title": "Word Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "word_count",
+          "char_count",
+          "sentence_count",
+          "question_count",
+          "line_count",
+          "list_item_count",
+          "has_code_block",
+          "code_line_count",
+          "inline_code_count",
+          "has_code"
+        ],
+        "title": "FeaturesOut",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HealthResponse": {
+        "properties": {
+          "app_name": {
+            "title": "App Name",
+            "type": "string"
+          },
+          "environment": {
+            "title": "Environment",
+            "type": "string"
+          },
+          "status": {
+            "const": "ok",
+            "title": "Status",
+            "type": "string"
+          },
+          "timestamp": {
+            "format": "date-time",
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "uptime_seconds": {
+            "title": "Uptime Seconds",
+            "type": "number"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "app_name",
+          "version",
+          "environment",
+          "timestamp",
+          "uptime_seconds"
+        ],
+        "title": "HealthResponse",
+        "type": "object"
+      },
+      "HttpInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "cors_enabled": {
+            "title": "Cors Enabled",
+            "type": "boolean"
+          },
+          "cors_origins_configured": {
+            "description": "Number of allowed origins (values not exposed).",
+            "title": "Cors Origins Configured",
+            "type": "integer"
+          },
+          "docs_enabled": {
+            "description": "Effective value (docs are off by default in production).",
+            "title": "Docs Enabled",
+            "type": "boolean"
+          },
+          "hsts_enabled": {
+            "title": "Hsts Enabled",
+            "type": "boolean"
+          },
+          "hsts_max_age_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null when HSTS is disabled.",
+            "title": "Hsts Max Age Seconds"
+          },
+          "max_request_body_bytes": {
+            "title": "Max Request Body Bytes",
+            "type": "integer"
+          },
+          "security_headers_enabled": {
+            "title": "Security Headers Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "docs_enabled",
+          "security_headers_enabled",
+          "hsts_enabled",
+          "hsts_max_age_seconds",
+          "max_request_body_bytes",
+          "cors_enabled",
+          "cors_origins_configured"
+        ],
+        "title": "HttpInfo",
+        "type": "object"
+      },
+      "Intent": {
+        "enum": [
+          "conversation",
+          "question_answering",
+          "explanation",
+          "code_generation",
+          "debugging",
+          "analysis",
+          "system_design",
+          "planning",
+          "math",
+          "creative_writing",
+          "summarization",
+          "translation",
+          "general"
+        ],
+        "title": "Intent",
+        "type": "string"
+      },
+      "IntentOut": {
+        "properties": {
+          "alternatives": {
+            "items": {
+              "$ref": "#/components/schemas/IntentScoreOut"
+            },
+            "title": "Alternatives",
+            "type": "array"
+          },
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "primary": {
+            "$ref": "#/components/schemas/Intent"
+          }
+        },
+        "required": [
+          "primary",
+          "confidence",
+          "alternatives"
+        ],
+        "title": "IntentOut",
+        "type": "object"
+      },
+      "IntentScoreOut": {
+        "properties": {
+          "intent": {
+            "$ref": "#/components/schemas/Intent"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "intent",
+          "score"
+        ],
+        "title": "IntentScoreOut",
+        "type": "object"
+      },
+      "ModeInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "allow_real_provider_calls": {
+            "title": "Allow Real Provider Calls",
+            "type": "boolean"
+          },
+          "mock_mode": {
+            "title": "Mock Mode",
+            "type": "boolean"
+          },
+          "real_provider_calls_enabled": {
+            "description": "True only when LLM_MOCK_MODE=false AND ALLOW_REAL_PROVIDER_CALLS=true.",
+            "title": "Real Provider Calls Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "mock_mode",
+          "allow_real_provider_calls",
+          "real_provider_calls_enabled"
+        ],
+        "title": "ModeInfo",
+        "type": "object"
+      },
+      "ModelCount": {
+        "properties": {
+          "average_latency_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Average Latency Ms"
+          },
+          "estimated_cost": {
+            "title": "Estimated Cost",
+            "type": "number"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "requests": {
+            "title": "Requests",
+            "type": "integer"
+          },
+          "total_tokens": {
+            "title": "Total Tokens",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "model",
+          "requests",
+          "total_tokens",
+          "estimated_cost",
+          "average_latency_ms"
+        ],
+        "title": "ModelCount",
+        "type": "object"
+      },
+      "ModelHealthOut": {
+        "properties": {
+          "consecutive_failures": {
+            "title": "Consecutive Failures",
+            "type": "integer"
+          },
+          "last_error_kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Error Kind"
+          },
+          "state": {
+            "title": "State",
+            "type": "string"
+          },
+          "total_failures": {
+            "title": "Total Failures",
+            "type": "integer"
+          },
+          "total_successes": {
+            "title": "Total Successes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "state",
+          "consecutive_failures",
+          "total_successes",
+          "total_failures",
+          "last_error_kind"
+        ],
+        "title": "ModelHealthOut",
+        "type": "object"
+      },
+      "ModelOut": {
+        "description": "Public view of a registry entry (no api_base, no credentials).",
+        "properties": {
+          "capabilities": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Capabilities",
+            "type": "array"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "fallbacks": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Fallbacks",
+            "type": "array"
+          },
+          "health": {
+            "$ref": "#/components/schemas/ModelHealthOut"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "input_cost_per_million": {
+            "title": "Input Cost Per Million",
+            "type": "number"
+          },
+          "max_context_tokens": {
+            "title": "Max Context Tokens",
+            "type": "integer"
+          },
+          "max_output_tokens": {
+            "title": "Max Output Tokens",
+            "type": "integer"
+          },
+          "output_cost_per_million": {
+            "title": "Output Cost Per Million",
+            "type": "number"
+          },
+          "pricing_is_placeholder": {
+            "title": "Pricing Is Placeholder",
+            "type": "boolean"
+          },
+          "priority": {
+            "title": "Priority",
+            "type": "integer"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "provider_model": {
+            "title": "Provider Model",
+            "type": "string"
+          },
+          "tier": {
+            "$ref": "#/components/schemas/ComplexityLevel"
+          },
+          "timeout_seconds": {
+            "title": "Timeout Seconds",
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "provider_model",
+          "tier",
+          "enabled",
+          "capabilities",
+          "priority",
+          "input_cost_per_million",
+          "output_cost_per_million",
+          "pricing_is_placeholder",
+          "max_context_tokens",
+          "max_output_tokens",
+          "timeout_seconds",
+          "fallbacks",
+          "description",
+          "health"
+        ],
+        "title": "ModelOut",
+        "type": "object"
+      },
+      "ModelsResponse": {
+        "properties": {
+          "health_backend": {
+            "description": "redis (shared across instances) | memory (process-local)",
+            "title": "Health Backend",
+            "type": "string"
+          },
+          "mock_mode": {
+            "title": "Mock Mode",
+            "type": "boolean"
+          },
+          "models": {
+            "items": {
+              "$ref": "#/components/schemas/ModelOut"
+            },
+            "title": "Models",
+            "type": "array"
+          },
+          "routing_strategy": {
+            "title": "Routing Strategy",
+            "type": "string"
+          }
+        },
+        "required": [
+          "mock_mode",
+          "routing_strategy",
+          "health_backend",
+          "models"
+        ],
+        "title": "ModelsResponse",
+        "type": "object"
+      },
+      "ObservabilityInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "access_log_enabled": {
+            "title": "Access Log Enabled",
+            "type": "boolean"
+          },
+          "log_format": {
+            "title": "Log Format",
+            "type": "string"
+          },
+          "log_level": {
+            "title": "Log Level",
+            "type": "string"
+          },
+          "metrics_enabled": {
+            "title": "Metrics Enabled",
+            "type": "boolean"
+          },
+          "tracing_enabled": {
+            "title": "Tracing Enabled",
+            "type": "boolean"
+          },
+          "tracing_exporter": {
+            "title": "Tracing Exporter",
+            "type": "string"
+          },
+          "tracing_sample_ratio": {
+            "title": "Tracing Sample Ratio",
+            "type": "number"
+          },
+          "tracing_trust_incoming": {
+            "title": "Tracing Trust Incoming",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "metrics_enabled",
+          "access_log_enabled",
+          "log_level",
+          "log_format",
+          "tracing_enabled",
+          "tracing_exporter",
+          "tracing_sample_ratio",
+          "tracing_trust_incoming"
+        ],
+        "title": "ObservabilityInfo",
+        "type": "object"
+      },
+      "Pagination": {
+        "additionalProperties": false,
+        "properties": {
+          "has_more": {
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "page",
+          "page_size",
+          "total",
+          "has_more"
+        ],
+        "title": "Pagination",
+        "type": "object"
+      },
+      "PersistenceInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "database_auto_migrate": {
+            "title": "Database Auto Migrate",
+            "type": "boolean"
+          },
+          "database_enabled": {
+            "title": "Database Enabled",
+            "type": "boolean"
+          },
+          "persist_prompts": {
+            "title": "Persist Prompts",
+            "type": "boolean"
+          },
+          "persist_responses": {
+            "title": "Persist Responses",
+            "type": "boolean"
+          },
+          "redis_enabled": {
+            "title": "Redis Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "redis_enabled",
+          "database_enabled",
+          "database_auto_migrate",
+          "persist_prompts",
+          "persist_responses"
+        ],
+        "title": "PersistenceInfo",
+        "type": "object"
+      },
+      "ProcessCounterGroup": {
+        "additionalProperties": false,
+        "properties": {
+          "labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Labels",
+            "type": "object"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "labels",
+          "value"
+        ],
+        "title": "ProcessCounterGroup",
+        "type": "object"
+      },
+      "ProductionChecks": {
+        "additionalProperties": false,
+        "properties": {
+          "enforced": {
+            "description": "True in production (errors abort startup) and staging (logged).",
+            "title": "Enforced",
+            "type": "boolean"
+          },
+          "issues": {
+            "description": "Result of the production configuration checks for the CURRENT settings. Outside production/staging these show what would block a production start.",
+            "items": {
+              "$ref": "#/components/schemas/ConfigIssueOut"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "enforced",
+          "issues"
+        ],
+        "title": "ProductionChecks",
+        "type": "object"
+      },
+      "ProviderCount": {
+        "properties": {
+          "failures": {
+            "title": "Failures",
+            "type": "integer"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "skipped": {
+            "title": "Skipped",
+            "type": "integer"
+          },
+          "successes": {
+            "title": "Successes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "provider",
+          "successes",
+          "failures",
+          "skipped"
+        ],
+        "title": "ProviderCount",
+        "type": "object"
+      },
+      "ProviderInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "credential_configured": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "true/false when a credential is required; null when the provider needs none (mock, local).",
+            "title": "Credential Configured"
+          },
+          "credential_required": {
+            "title": "Credential Required",
+            "type": "boolean"
+          },
+          "credential_setting": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Name of the environment variable that holds the key (never its value).",
+            "title": "Credential Setting"
+          },
+          "models": {
+            "description": "Registered model ids served by this provider.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Models",
+            "type": "array"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "supported_for_real_calls": {
+            "description": "Provider is in the supported real-provider catalog.",
+            "title": "Supported For Real Calls",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "provider",
+          "supported_for_real_calls",
+          "credential_required",
+          "credential_setting",
+          "credential_configured",
+          "models"
+        ],
+        "title": "ProviderInfo",
+        "type": "object"
+      },
+      "RateLimitInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "fail_open": {
+            "title": "Fail Open",
+            "type": "boolean"
+          },
+          "model_limits": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "Per-model requests/minute across all instances.",
+            "title": "Model Limits",
+            "type": "object"
+          },
+          "per_hour": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null = no per-hour limit.",
+            "title": "Per Hour"
+          },
+          "per_minute": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null = no per-minute limit.",
+            "title": "Per Minute"
+          },
+          "trust_proxy_headers": {
+            "title": "Trust Proxy Headers",
+            "type": "boolean"
+          },
+          "trusted_proxies_configured": {
+            "description": "Number of trusted proxy entries (addresses not exposed).",
+            "title": "Trusted Proxies Configured",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "enabled",
+          "per_minute",
+          "per_hour",
+          "fail_open",
+          "model_limits",
+          "trust_proxy_headers",
+          "trusted_proxies_configured"
+        ],
+        "title": "RateLimitInfo",
+        "type": "object"
+      },
+      "ReasoningOut": {
+        "properties": {
+          "estimated_steps": {
+            "description": "Rough number of reasoning steps required.",
+            "minimum": 1.0,
+            "title": "Estimated Steps",
+            "type": "integer"
+          },
+          "score": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Score",
+            "type": "number"
+          },
+          "signals": {
+            "items": {
+              "$ref": "#/components/schemas/SignalOut"
+            },
+            "title": "Signals",
+            "type": "array"
+          }
+        },
+        "required": [
+          "score",
+          "estimated_steps",
+          "signals"
+        ],
+        "title": "ReasoningOut",
+        "type": "object"
+      },
+      "RefusalCount": {
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "count"
+        ],
+        "title": "RefusalCount",
+        "type": "object"
+      },
+      "RefusalEvent": {
+        "additionalProperties": false,
+        "properties": {
+          "attempt_number": {
+            "title": "Attempt Number",
+            "type": "integer"
+          },
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "mock_mode": {
+            "title": "Mock Mode",
+            "type": "boolean"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider"
+          },
+          "reason": {
+            "enum": [
+              "per_request_limit",
+              "global_daily_budget",
+              "client_daily_budget",
+              "client_daily_tokens",
+              "budget_unavailable",
+              "other"
+            ],
+            "title": "Reason",
+            "type": "string"
+          },
+          "request_outcome": {
+            "enum": [
+              "refused",
+              "served_by_another_model",
+              "failed"
+            ],
+            "title": "Request Outcome",
+            "type": "string"
+          },
+          "time": {
+            "format": "date-time",
+            "title": "Time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "time",
+          "reason",
+          "category",
+          "description",
+          "model",
+          "provider",
+          "attempt_number",
+          "request_outcome",
+          "mock_mode"
+        ],
+        "title": "RefusalEvent",
+        "type": "object"
+      },
+      "RoutingInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "default_max_output_tokens": {
+            "title": "Default Max Output Tokens",
+            "type": "integer"
+          },
+          "fallback_auto_tier": {
+            "title": "Fallback Auto Tier",
+            "type": "boolean"
+          },
+          "fallback_enabled": {
+            "title": "Fallback Enabled",
+            "type": "boolean"
+          },
+          "fallback_on_override": {
+            "title": "Fallback On Override",
+            "type": "boolean"
+          },
+          "health_backend": {
+            "title": "Health Backend",
+            "type": "string"
+          },
+          "health_cooldown_seconds": {
+            "title": "Health Cooldown Seconds",
+            "type": "number"
+          },
+          "health_failure_threshold": {
+            "title": "Health Failure Threshold",
+            "type": "integer"
+          },
+          "max_fallback_models": {
+            "title": "Max Fallback Models",
+            "type": "integer"
+          },
+          "model_registry": {
+            "description": "Source of the model registry (the file path is not exposed).",
+            "enum": [
+              "built_in",
+              "custom_file"
+            ],
+            "title": "Model Registry",
+            "type": "string"
+          },
+          "provider_max_retries": {
+            "title": "Provider Max Retries",
+            "type": "integer"
+          },
+          "provider_retry_backoff_seconds": {
+            "title": "Provider Retry Backoff Seconds",
+            "type": "number"
+          },
+          "provider_timeout_seconds": {
+            "title": "Provider Timeout Seconds",
+            "type": "number"
+          },
+          "real_max_output_tokens": {
+            "title": "Real Max Output Tokens",
+            "type": "integer"
+          },
+          "strategy": {
+            "title": "Strategy",
+            "type": "string"
+          },
+          "tier_escalation": {
+            "title": "Tier Escalation",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "strategy",
+          "tier_escalation",
+          "model_registry",
+          "fallback_enabled",
+          "fallback_auto_tier",
+          "fallback_on_override",
+          "max_fallback_models",
+          "provider_timeout_seconds",
+          "provider_max_retries",
+          "provider_retry_backoff_seconds",
+          "default_max_output_tokens",
+          "real_max_output_tokens",
+          "health_backend",
+          "health_failure_threshold",
+          "health_cooldown_seconds"
+        ],
+        "title": "RoutingInfo",
+        "type": "object"
+      },
+      "RoutingOut": {
+        "properties": {
+          "candidates": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Candidates",
+            "type": "array"
+          },
+          "override": {
+            "title": "Override",
+            "type": "boolean"
+          },
+          "preferred_capabilities": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Preferred Capabilities",
+            "type": "array"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "requested_tier": {
+            "$ref": "#/components/schemas/ComplexityLevel"
+          },
+          "routed_tier": {
+            "$ref": "#/components/schemas/ComplexityLevel"
+          },
+          "selected_model": {
+            "title": "Selected Model",
+            "type": "string"
+          },
+          "strategy": {
+            "title": "Strategy",
+            "type": "string"
+          }
+        },
+        "required": [
+          "selected_model",
+          "requested_tier",
+          "routed_tier",
+          "strategy",
+          "override",
+          "reason",
+          "candidates",
+          "preferred_capabilities"
+        ],
+        "title": "RoutingOut",
+        "type": "object"
+      },
+      "SettingsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "app": {
+            "$ref": "#/components/schemas/AppInfo"
+          },
+          "auth": {
+            "$ref": "#/components/schemas/AuthInfo"
+          },
+          "budget": {
+            "$ref": "#/components/schemas/BudgetInfo"
+          },
+          "cache": {
+            "$ref": "#/components/schemas/CacheInfo"
+          },
+          "http": {
+            "$ref": "#/components/schemas/HttpInfo"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/ModeInfo"
+          },
+          "observability": {
+            "$ref": "#/components/schemas/ObservabilityInfo"
+          },
+          "persistence": {
+            "$ref": "#/components/schemas/PersistenceInfo"
+          },
+          "production_checks": {
+            "$ref": "#/components/schemas/ProductionChecks"
+          },
+          "providers": {
+            "items": {
+              "$ref": "#/components/schemas/ProviderInfo"
+            },
+            "title": "Providers",
+            "type": "array"
+          },
+          "rate_limits": {
+            "$ref": "#/components/schemas/RateLimitInfo"
+          },
+          "routing": {
+            "$ref": "#/components/schemas/RoutingInfo"
+          }
+        },
+        "required": [
+          "app",
+          "mode",
+          "routing",
+          "auth",
+          "providers",
+          "rate_limits",
+          "cache",
+          "budget",
+          "persistence",
+          "http",
+          "observability",
+          "production_checks"
+        ],
+        "title": "SettingsResponse",
+        "type": "object"
+      },
+      "SignalOut": {
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "weight": {
+            "description": "Contribution to the complexity score (negative = simpler).",
+            "title": "Weight",
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "weight",
+          "detail"
+        ],
+        "title": "SignalOut",
+        "type": "object"
+      },
+      "SpendDay": {
+        "additionalProperties": false,
+        "properties": {
+          "cost_unknown_requests": {
+            "description": "Successful requests without a recorded cost.",
+            "title": "Cost Unknown Requests",
+            "type": "integer"
+          },
+          "date": {
+            "format": "date",
+            "title": "Date",
+            "type": "string"
+          },
+          "mock_estimated_cost_usd": {
+            "description": "Simulated: mock responses at placeholder prices (no money).",
+            "title": "Mock Estimated Cost Usd",
+            "type": "number"
+          },
+          "mock_requests": {
+            "title": "Mock Requests",
+            "type": "integer"
+          },
+          "placeholder_priced_requests": {
+            "title": "Placeholder Priced Requests",
+            "type": "integer"
+          },
+          "real_estimated_cost_usd": {
+            "description": "Estimate for real calls; NOT a provider invoice.",
+            "title": "Real Estimated Cost Usd",
+            "type": "number"
+          },
+          "real_requests": {
+            "title": "Real Requests",
+            "type": "integer"
+          },
+          "requests": {
+            "description": "Persisted chat requests (all outcomes).",
+            "title": "Requests",
+            "type": "integer"
+          },
+          "successful_requests": {
+            "title": "Successful Requests",
+            "type": "integer"
+          },
+          "total_tokens": {
+            "title": "Total Tokens",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "requests",
+          "successful_requests",
+          "total_tokens",
+          "mock_requests",
+          "real_requests",
+          "mock_estimated_cost_usd",
+          "real_estimated_cost_usd",
+          "placeholder_priced_requests",
+          "cost_unknown_requests",
+          "date"
+        ],
+        "title": "SpendDay",
+        "type": "object"
+      },
+      "SpendFigures": {
+        "additionalProperties": false,
+        "properties": {
+          "cost_unknown_requests": {
+            "description": "Successful requests without a recorded cost.",
+            "title": "Cost Unknown Requests",
+            "type": "integer"
+          },
+          "mock_estimated_cost_usd": {
+            "description": "Simulated: mock responses at placeholder prices (no money).",
+            "title": "Mock Estimated Cost Usd",
+            "type": "number"
+          },
+          "mock_requests": {
+            "title": "Mock Requests",
+            "type": "integer"
+          },
+          "placeholder_priced_requests": {
+            "title": "Placeholder Priced Requests",
+            "type": "integer"
+          },
+          "real_estimated_cost_usd": {
+            "description": "Estimate for real calls; NOT a provider invoice.",
+            "title": "Real Estimated Cost Usd",
+            "type": "number"
+          },
+          "real_requests": {
+            "title": "Real Requests",
+            "type": "integer"
+          },
+          "requests": {
+            "description": "Persisted chat requests (all outcomes).",
+            "title": "Requests",
+            "type": "integer"
+          },
+          "successful_requests": {
+            "title": "Successful Requests",
+            "type": "integer"
+          },
+          "total_tokens": {
+            "title": "Total Tokens",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "requests",
+          "successful_requests",
+          "total_tokens",
+          "mock_requests",
+          "real_requests",
+          "mock_estimated_cost_usd",
+          "real_estimated_cost_usd",
+          "placeholder_priced_requests",
+          "cost_unknown_requests"
+        ],
+        "title": "SpendFigures",
+        "type": "object"
+      },
+      "SpendGroup": {
+        "additionalProperties": false,
+        "properties": {
+          "mock_estimated_cost_usd": {
+            "title": "Mock Estimated Cost Usd",
+            "type": "number"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "placeholder_priced_requests": {
+            "title": "Placeholder Priced Requests",
+            "type": "integer"
+          },
+          "real_estimated_cost_usd": {
+            "title": "Real Estimated Cost Usd",
+            "type": "number"
+          },
+          "requests": {
+            "description": "Successful requests served by this provider/model.",
+            "title": "Requests",
+            "type": "integer"
+          },
+          "total_tokens": {
+            "title": "Total Tokens",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "requests",
+          "total_tokens",
+          "mock_estimated_cost_usd",
+          "real_estimated_cost_usd",
+          "placeholder_priced_requests"
+        ],
+        "title": "SpendGroup",
+        "type": "object"
+      },
+      "TechnicalOut": {
+        "properties": {
+          "detected_terms": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Detected Terms",
+            "type": "array"
+          },
+          "domains": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Domains",
+            "type": "array"
+          },
+          "is_coding": {
+            "title": "Is Coding",
+            "type": "boolean"
+          },
+          "is_technical": {
+            "title": "Is Technical",
+            "type": "boolean"
+          },
+          "score": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "is_technical",
+          "is_coding",
+          "score",
+          "domains",
+          "detected_terms"
+        ],
+        "title": "TechnicalOut",
+        "type": "object"
+      },
+      "ThresholdsOut": {
+        "properties": {
+          "complex_min": {
+            "title": "Complex Min",
+            "type": "number"
+          },
+          "simple_max": {
+            "title": "Simple Max",
+            "type": "number"
+          }
+        },
+        "required": [
+          "simple_max",
+          "complex_min"
+        ],
+        "title": "ThresholdsOut",
+        "type": "object"
+      },
+      "UsageOut": {
+        "properties": {
+          "input_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Tokens"
+          },
+          "output_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Tokens"
+          },
+          "source": {
+            "description": "provider_reported | estimated | partially_estimated | unavailable | cache_hit",
+            "title": "Source",
+            "type": "string"
+          },
+          "total_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Tokens"
+          }
+        },
+        "required": [
+          "input_tokens",
+          "output_tokens",
+          "total_tokens",
+          "source"
+        ],
+        "title": "UsageOut",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Distributed LLM Router",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/analytics/summary": {
+      "get": {
+        "operationId": "analytics_summary_api_v1_analytics_summary_get",
+        "parameters": [
+          {
+            "description": "Inclusive start (ISO 8601; naive = UTC).",
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Inclusive start (ISO 8601; naive = UTC).",
+              "title": "Start"
+            }
+          },
+          {
+            "description": "Exclusive end (ISO 8601; naive = UTC).",
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Exclusive end (ISO 8601; naive = UTC).",
+              "title": "End"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsSummaryResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Usage, cost, cache and fallback summary",
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/api/v1/budget/refusals": {
+      "get": {
+        "operationId": "budget_refusals_api_v1_budget_refusals_get",
+        "parameters": [
+          {
+            "description": "UTC day, YYYY-MM-DD (inclusive).",
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "UTC day, YYYY-MM-DD (inclusive).",
+              "title": "Start Date"
+            }
+          },
+          {
+            "description": "UTC day, YYYY-MM-DD (inclusive).",
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "UTC day, YYYY-MM-DD (inclusive).",
+              "title": "End Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "maximum": 10000,
+              "minimum": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Page Size",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BudgetRefusalsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Persisted budget refusals of chat attempts (paginated, bounded date range)",
+        "tags": [
+          "budget"
+        ]
+      }
+    },
+    "/api/v1/budget/spend": {
+      "get": {
+        "operationId": "budget_spend_api_v1_budget_spend_get",
+        "parameters": [
+          {
+            "description": "UTC day, YYYY-MM-DD (inclusive).",
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "UTC day, YYYY-MM-DD (inclusive).",
+              "title": "Start Date"
+            }
+          },
+          {
+            "description": "UTC day, YYYY-MM-DD (inclusive).",
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "UTC day, YYYY-MM-DD (inclusive).",
+              "title": "End Date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BudgetSpendResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Estimated cost per UTC day, provider and model from persisted request history",
+        "tags": [
+          "budget"
+        ]
+      }
+    },
+    "/api/v1/budget/status": {
+      "get": {
+        "operationId": "budget_status_api_v1_budget_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BudgetStatusResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Configured daily limits, today's counted spend and the current budget period",
+        "tags": [
+          "budget"
+        ]
+      }
+    },
+    "/api/v1/cache": {
+      "delete": {
+        "operationId": "clear_cache_api_v1_cache_delete",
+        "parameters": [
+          {
+            "description": "Also reset hit/miss counters.",
+            "in": "query",
+            "name": "reset_stats",
+            "required": false,
+            "schema": {
+              "default": false,
+              "description": "Also reset hit/miss counters.",
+              "title": "Reset Stats",
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CacheClearResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Clear the response cache (requires ADMIN_API_TOKEN bearer token)",
+        "tags": [
+          "cache"
+        ]
+      }
+    },
+    "/api/v1/cache/stats": {
+      "get": {
+        "operationId": "cache_stats_api_v1_cache_stats_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CacheStatsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Cache statistics (no cached content)",
+        "tags": [
+          "cache"
+        ]
+      }
+    },
+    "/api/v1/chat": {
+      "post": {
+        "operationId": "chat_api_v1_chat_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Route a query to the best model and answer it",
+        "tags": [
+          "chat"
+        ]
+      }
+    },
+    "/api/v1/classify": {
+      "post": {
+        "operationId": "classify_api_v1_classify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClassifyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassifyResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Classify a query as SIMPLE, MEDIUM or COMPLEX",
+        "tags": [
+          "classification"
+        ]
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "operationId": "health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Liveness check",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/v1/health/dependencies": {
+      "get": {
+        "description": "Readiness-style detail. Unlike /health, this touches Redis and PostgreSQL.",
+        "operationId": "dependencies_api_v1_health_dependencies_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DependenciesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Redis / PostgreSQL reachability",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/v1/models": {
+      "get": {
+        "operationId": "list_models_api_v1_models_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List registered models and their health",
+        "tags": [
+          "models"
+        ]
+      }
+    },
+    "/api/v1/settings": {
+      "get": {
+        "operationId": "get_settings_view_api_v1_settings_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Effective configuration (non-secret allow-list; no values of keys, tokens or passwords)",
+        "tags": [
+          "settings"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Liveness check",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/health/dependencies": {
+      "get": {
+        "description": "Readiness-style detail. Unlike /health, this touches Redis and PostgreSQL.",
+        "operationId": "dependencies_health_dependencies_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DependenciesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Redis / PostgreSQL reachability",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/metrics": {
+      "get": {
+        "operationId": "metrics_metrics_get",
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain; version=1.0.0; charset=utf-8": {}
+            },
+            "description": "Prometheus text format"
+          }
+        },
+        "summary": "Prometheus metrics (text exposition format)",
+        "tags": [
+          "observability"
+        ]
+      }
+    }
+  }
+}

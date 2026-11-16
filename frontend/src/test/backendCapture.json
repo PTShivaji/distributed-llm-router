@@ -1,0 +1,353 @@
+{
+  "refusals": {
+    "by_provider": [],
+    "by_reason": [],
+    "embedding_refusals_persisted": false,
+    "end_date": "2026-11-03",
+    "events": [],
+    "notes": [
+      "Refused paid embedding calls are not persisted: only this process's counters are shown, which are not shared between instances and reset on restart.",
+      "No client identifiers, request ids, prompts or responses are returned.",
+      "Events exist only for periods when persistence was enabled and the database reachable."
+    ],
+    "pagination": {
+      "has_more": false,
+      "page": 1,
+      "page_size": 50,
+      "total": 0
+    },
+    "persisted_scope": "chat provider attempts refused by the budget guard (provider_attempt outcome skipped_budget)",
+    "process_chat_refusals": [],
+    "process_counters_available": true,
+    "process_embedding_refusals": [],
+    "refused_requests": 0,
+    "source": "request_history",
+    "start_date": "2026-11-01",
+    "timezone": "UTC",
+    "total_refused_attempts": 0
+  },
+  "settings": {
+    "app": {
+      "debug": false,
+      "environment": "test",
+      "name": "Distributed LLM Router",
+      "uptime_seconds": 0.548,
+      "version": "0.1.0"
+    },
+    "auth": {
+      "admin_endpoints_enabled": false,
+      "chat_auth_mode": "none",
+      "chat_clients_configured": 0,
+      "client_id_hashing": "sha256",
+      "observability_token_required": false
+    },
+    "budget": {
+      "applies_to": "real provider calls and paid embeddings only (mock calls never use the budget)",
+      "configured": true,
+      "daily_tokens_per_client": null,
+      "daily_usd": 5.0,
+      "daily_usd_per_client": 1.0,
+      "fail_closed": true,
+      "max_cost_per_request_usd": null,
+      "monthly_limit_supported": false
+    },
+    "cache": {
+      "embedding_model": null,
+      "embedding_pricing_is_placeholder": true,
+      "embedding_provider": "local",
+      "enabled": false,
+      "max_entries_per_scope": 1000,
+      "semantic_allow_lexical": false,
+      "semantic_enabled": false,
+      "similarity_threshold": 0.92,
+      "ttl_seconds": 3600
+    },
+    "http": {
+      "cors_enabled": false,
+      "cors_origins_configured": 0,
+      "docs_enabled": true,
+      "hsts_enabled": false,
+      "hsts_max_age_seconds": null,
+      "max_request_body_bytes": 1048576,
+      "security_headers_enabled": true
+    },
+    "mode": {
+      "allow_real_provider_calls": false,
+      "mock_mode": true,
+      "real_provider_calls_enabled": false
+    },
+    "observability": {
+      "access_log_enabled": true,
+      "log_format": "text",
+      "log_level": "ERROR",
+      "metrics_enabled": true,
+      "tracing_enabled": false,
+      "tracing_exporter": "none",
+      "tracing_sample_ratio": 1.0,
+      "tracing_trust_incoming": false
+    },
+    "persistence": {
+      "database_auto_migrate": false,
+      "database_enabled": true,
+      "persist_prompts": false,
+      "persist_responses": false,
+      "redis_enabled": false
+    },
+    "production_checks": {
+      "enforced": false,
+      "issues": [
+        {
+          "message": "does not meet the production requirements for this secret (missing, too weak, a known default or reused); the value is never shown",
+          "setting": "ADMIN_API_TOKEN",
+          "severity": "error"
+        },
+        {
+          "message": "does not meet the production requirements for this secret (missing, too weak, a known default or reused); the value is never shown",
+          "setting": "OBSERVABILITY_API_TOKEN",
+          "severity": "error"
+        },
+        {
+          "message": "does not meet the production requirements for this secret (missing, too weak, a known default or reused); the value is never shown",
+          "setting": "CLIENT_ID_HASH_KEY",
+          "severity": "error"
+        },
+        {
+          "message": "must be 'api_key' in production (/api/v1/chat would be open to anyone)",
+          "setting": "CHAT_AUTH_MODE",
+          "severity": "error"
+        },
+        {
+          "message": "does not meet the production requirements for this secret (missing, too weak, a known default or reused); the value is never shown",
+          "setting": "POSTGRES_PASSWORD",
+          "severity": "error"
+        },
+        {
+          "message": "enable once the API is served over HTTPS",
+          "setting": "HSTS_ENABLED",
+          "severity": "warning"
+        },
+        {
+          "message": "rate limiting is disabled",
+          "setting": "RATE_LIMIT_ENABLED",
+          "severity": "warning"
+        },
+        {
+          "message": "mock mode is on: responses are not real model output",
+          "setting": "LLM_MOCK_MODE",
+          "severity": "warning"
+        }
+      ]
+    },
+    "providers": [
+      {
+        "credential_configured": true,
+        "credential_required": true,
+        "credential_setting": "OPENAI_API_KEY",
+        "models": [],
+        "provider": "openai",
+        "supported_for_real_calls": true
+      },
+      {
+        "credential_configured": false,
+        "credential_required": true,
+        "credential_setting": "ANTHROPIC_API_KEY",
+        "models": [],
+        "provider": "anthropic",
+        "supported_for_real_calls": true
+      },
+      {
+        "credential_configured": false,
+        "credential_required": true,
+        "credential_setting": "GEMINI_API_KEY",
+        "models": [],
+        "provider": "gemini",
+        "supported_for_real_calls": true
+      },
+      {
+        "credential_configured": false,
+        "credential_required": true,
+        "credential_setting": "GROQ_API_KEY",
+        "models": [],
+        "provider": "groq",
+        "supported_for_real_calls": true
+      },
+      {
+        "credential_configured": false,
+        "credential_required": true,
+        "credential_setting": "MISTRAL_API_KEY",
+        "models": [],
+        "provider": "mistral",
+        "supported_for_real_calls": true
+      },
+      {
+        "credential_configured": null,
+        "credential_required": false,
+        "credential_setting": null,
+        "models": [],
+        "provider": "ollama",
+        "supported_for_real_calls": true
+      },
+      {
+        "credential_configured": null,
+        "credential_required": false,
+        "credential_setting": null,
+        "models": [
+          "mock-advanced",
+          "mock-balanced",
+          "mock-coder",
+          "mock-fast",
+          "mock-legacy"
+        ],
+        "provider": "mock",
+        "supported_for_real_calls": false
+      }
+    ],
+    "rate_limits": {
+      "enabled": false,
+      "fail_open": true,
+      "model_limits": {},
+      "per_hour": 1000,
+      "per_minute": 60,
+      "trust_proxy_headers": false,
+      "trusted_proxies_configured": 0
+    },
+    "routing": {
+      "default_max_output_tokens": 1024,
+      "fallback_auto_tier": true,
+      "fallback_enabled": true,
+      "fallback_on_override": false,
+      "health_backend": "memory",
+      "health_cooldown_seconds": 30.0,
+      "health_failure_threshold": 3,
+      "max_fallback_models": 3,
+      "model_registry": "built_in",
+      "provider_max_retries": 1,
+      "provider_retry_backoff_seconds": 0.25,
+      "provider_timeout_seconds": 30.0,
+      "real_max_output_tokens": 4096,
+      "strategy": "priority",
+      "tier_escalation": true
+    }
+  },
+  "spend": {
+    "by_model": [],
+    "by_model_truncated": false,
+    "by_provider": [],
+    "by_provider_truncated": false,
+    "cost_basis": "no persisted requests in this range",
+    "currency": "USD",
+    "days": [
+      {
+        "cost_unknown_requests": 0,
+        "date": "2026-11-01",
+        "mock_estimated_cost_usd": 0.0,
+        "mock_requests": 0,
+        "placeholder_priced_requests": 0,
+        "real_estimated_cost_usd": 0.0,
+        "real_requests": 0,
+        "requests": 0,
+        "successful_requests": 0,
+        "total_tokens": 0
+      },
+      {
+        "cost_unknown_requests": 0,
+        "date": "2026-11-02",
+        "mock_estimated_cost_usd": 0.0,
+        "mock_requests": 0,
+        "placeholder_priced_requests": 0,
+        "real_estimated_cost_usd": 0.0,
+        "real_requests": 0,
+        "requests": 0,
+        "successful_requests": 0,
+        "total_tokens": 0
+      },
+      {
+        "cost_unknown_requests": 0,
+        "date": "2026-11-03",
+        "mock_estimated_cost_usd": 0.0,
+        "mock_requests": 0,
+        "placeholder_priced_requests": 0,
+        "real_estimated_cost_usd": 0.0,
+        "real_requests": 0,
+        "requests": 0,
+        "successful_requests": 0,
+        "total_tokens": 0
+      }
+    ],
+    "embedding_spend_included": false,
+    "end_date": "2026-11-03",
+    "notes": [
+      "Costs are per-request estimates from persisted history, never provider invoices.",
+      "Only the attempt that produced the answer is costed. Failed attempts that a provider may still have billed (timeouts, 5xx) are counted by the budget guard (GET /budget/status), not here.",
+      "Paid embedding spend is not persisted and is not included.",
+      "Days without persisted requests show 0. Requests are missing for periods when persistence was disabled or the database was unreachable."
+    ],
+    "source": "request_history",
+    "start_date": "2026-11-01",
+    "timezone": "UTC",
+    "totals": {
+      "cost_unknown_requests": 0,
+      "mock_estimated_cost_usd": 0.0,
+      "mock_requests": 0,
+      "placeholder_priced_requests": 0,
+      "real_estimated_cost_usd": 0.0,
+      "real_requests": 0,
+      "requests": 0,
+      "successful_requests": 0,
+      "total_tokens": 0
+    }
+  },
+  "status": {
+    "embedding": {
+      "budgeted": false,
+      "paid": false,
+      "persisted_history": false,
+      "process_counters_available": true,
+      "process_estimated_cost_usd": 0.0,
+      "process_events": [],
+      "provider": "local"
+    },
+    "enforcement": {
+      "applies_to": "real provider calls and paid embeddings only (mock calls never reserve or count spend)",
+      "configured": true,
+      "currently_applicable": false,
+      "daily_tracking": true,
+      "fail_closed": true,
+      "mock_mode": true,
+      "paid_embeddings_enabled": false,
+      "real_provider_calls_enabled": false,
+      "store": "memory",
+      "store_scope": "this_process_only"
+    },
+    "limits": {
+      "daily_tokens_per_client": null,
+      "daily_usd": 5.0,
+      "daily_usd_per_client": 1.0,
+      "max_cost_per_request_usd": null
+    },
+    "monthly": {
+      "enforcement_supported": false,
+      "limit_usd": null,
+      "note": "The backend enforces daily limits only; no monthly limit exists or is derived."
+    },
+    "notes": [
+      "Budget counters are process-local (REDIS_ENABLED=false): other instances keep their own.",
+      "Real provider calls and paid embeddings are disabled: nothing can be counted against the budget."
+    ],
+    "period": {
+      "day": "2026-11-11",
+      "granularity": "day",
+      "resets_at": "2026-11-12T00:00:00Z",
+      "starts_at": "2026-11-11T00:00:00Z",
+      "timezone": "UTC"
+    },
+    "today": {
+      "available": true,
+      "counted_usd": 0.0,
+      "per_client_counters_exposed": false,
+      "remaining_usd": 5.0,
+      "source": "budget_counters",
+      "unavailable_reason": null
+    }
+  }
+}

@@ -1,0 +1,45 @@
+name: llm-router
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: llm-router-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      # Bound to localhost only: Redis has no password in development (Phase 5 step 7).
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: llm-router-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-router}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-router_password}
+      POSTGRES_DB: ${POSTGRES_DB:-llm_router}
+    ports:
+      # Host port 5433 avoids conflict with a local PostgreSQL on 5432.
+      # Container still listens on 5432 internally. Bound to localhost only
+      # (development password); production uses docker-compose.prod.yml (no host ports).
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  postgres_data:

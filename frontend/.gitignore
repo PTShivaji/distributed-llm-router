@@ -1,0 +1,16 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.vite/
+
+# Environment files: NEVER commit real values (tokens are entered at runtime, never in .env)
+.env
+.env.*
+!.env.example
+
+# Logs and editor files
+npm-debug.log*
+*.log
+.DS_Store

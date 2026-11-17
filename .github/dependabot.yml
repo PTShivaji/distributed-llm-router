@@ -21,6 +21,8 @@ updates:
         versions: [">=2.0.0"]
       - dependency-name: "importlib-metadata"
         versions: [">=9.0.0"]
+      - dependency-name: "python-dateutil"
+        versions: [">=3.0.0"]
     groups:
       python-minor-and-patch:
         update-types: ["minor", "patch"]
